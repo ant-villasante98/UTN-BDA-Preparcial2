@@ -2,6 +2,9 @@ package com.utn.bda.biblioteca.medios.digitales.service.Implement;
 
 import com.utn.bda.biblioteca.medios.digitales.model.dto.TrackByAGDto;
 import com.utn.bda.biblioteca.medios.digitales.model.dto.TrackDto;
+import com.utn.bda.biblioteca.medios.digitales.model.entity.AlbumEntity;
+import com.utn.bda.biblioteca.medios.digitales.model.entity.GenreEntity;
+import com.utn.bda.biblioteca.medios.digitales.model.entity.MediaTypeEntity;
 import com.utn.bda.biblioteca.medios.digitales.model.entity.TrackEntity;
 import com.utn.bda.biblioteca.medios.digitales.repository.TrackRepository;
 import com.utn.bda.biblioteca.medios.digitales.service.*;
@@ -59,7 +62,19 @@ public class TrackServiceImpl implements TrackService {
     public void update(Long id, TrackDto model) {
         TrackEntity trackEntity = this.trackRepository.findById(id)
                 .orElseThrow(()-> new NoSuchElementException("Track no encontrado con el id "+id));
+        this.albumService.getById(model.getAlbumId());
+        this.genreService.getById(model.getGenreId());
+        this.mediaTypeService.getById(model.getMediaTypeId());
+        trackEntity.setName(model.getName());
+        trackEntity.setComposer(model.getComposer());
+        trackEntity.setMilliseconds(model.getMilliseconds());
+        trackEntity.setBytes(model.getBytes());
+        trackEntity.setUnitPrice(model.getUnitPrice());
+        trackEntity.setAlbumEntity(AlbumEntity.builder().id(model.getAlbumId()).build());
+        trackEntity.setGenreEntity(GenreEntity.builder().id(model.getGenreId()).build());
+        trackEntity.setMediaTypeEntity(MediaTypeEntity.builder().id(model.getMediaTypeId()).build());
 
+        this.trackRepository.save(trackEntity);
 
     }
 
