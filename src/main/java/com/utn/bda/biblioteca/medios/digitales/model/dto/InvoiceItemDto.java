@@ -1,6 +1,7 @@
 package com.utn.bda.biblioteca.medios.digitales.model.dto;
 
 
+import com.utn.bda.biblioteca.medios.digitales.application.request.CreateInvoiceItemRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +16,17 @@ public class InvoiceItemDto {
 
     private Float unitPrice;
 
-    private long quantity;
+    private Long quantity;
+    private Long invoiceId;
+    private Long trackId;
+
+    public static InvoiceItemDto from(CreateInvoiceItemRequest invoiceItemRequest){
+        return new InvoiceItemDto(
+                0L,
+                invoiceItemRequest.getUnitPrice(),
+                invoiceItemRequest.getQuantity(),
+                invoiceItemRequest.getInvoiceId(),
+                invoiceItemRequest.getTrackId()
+        );
+    }
 }

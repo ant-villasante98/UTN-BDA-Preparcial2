@@ -8,7 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateArtistRequest {
-    private long id;
-
-    private String title;
+    private String name;
 }

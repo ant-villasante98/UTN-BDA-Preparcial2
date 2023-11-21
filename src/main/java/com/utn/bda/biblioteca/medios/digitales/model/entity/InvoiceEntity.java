@@ -17,6 +17,7 @@ import java.util.List;
 public class InvoiceEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "invoiceid")
     private Long id;
 

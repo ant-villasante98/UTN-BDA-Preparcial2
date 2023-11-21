@@ -21,8 +21,8 @@ public class PlaylistMapper implements Mapper<PlaylistDto, PlaylistEntity>{
         return new PlaylistDto(
                 model.getId(),
                 model.getName(),
-                model.getPlaylistTrack().stream()
-                        .map(trackMapper::toDto)
+                model.getPlaylistTrackEntities().stream()
+                        .map( associationPT-> trackMapper.toDto(associationPT.getTrackEntity()))
                         .toList()
         );
     }
@@ -39,7 +39,7 @@ public class PlaylistMapper implements Mapper<PlaylistDto, PlaylistEntity>{
         return new PlaylistEntity(
                 model.getId(),
                 model.getName(),
-                trackEntities
+                Collections.emptyList()
         );
     }
 }

@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 public class AlbumEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "albumid")
     private Long id;
 

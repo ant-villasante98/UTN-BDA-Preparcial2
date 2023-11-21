@@ -7,7 +7,9 @@ public interface Service<T,E> {
 
     T getById(E id);
 
-    T save(T model);
+    T add(T model);
+
+    void update(E id , T model);
 
     void delete(E id);
 }

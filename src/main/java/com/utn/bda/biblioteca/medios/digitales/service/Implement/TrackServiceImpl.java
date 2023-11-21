@@ -42,7 +42,7 @@ public class TrackServiceImpl implements TrackService {
     }
 
     @Override
-    public TrackDto save(TrackDto model) {
+    public TrackDto add(TrackDto model) {
         Optional<TrackEntity> optionalTrack = Stream.of(model).map(trackMapper::toEntity).findFirst();
         if (optionalTrack.get().getId() == null){
             Optional<Long> maxId = this.trackRepository.findAll().stream().map(TrackEntity::getId).max(Long::compareTo);
@@ -51,6 +51,11 @@ public class TrackServiceImpl implements TrackService {
         TrackEntity trackEntity = optionalTrack.orElseThrow();
         this.trackRepository.save(trackEntity);
         return Stream.of(trackEntity).map(trackMapper::toDto).findFirst().orElseThrow();
+    }
+
+    @Override
+    public void update(Long id, TrackDto model) {
+
     }
 
     @Override

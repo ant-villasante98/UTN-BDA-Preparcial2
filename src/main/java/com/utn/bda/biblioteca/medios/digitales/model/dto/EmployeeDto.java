@@ -46,7 +46,7 @@ public class EmployeeDto {
     public  static EmployeeDto from(CreateEmployeeRequest employeeRequest){
 
         return new EmployeeDto(
-                null,
+                0L,
                 employeeRequest.getLastName(),
                 employeeRequest.getFirstName(),
                 employeeRequest.getTitle(),

@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 public class TrackEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trackid")
     private Long id;
 
@@ -43,6 +44,10 @@ public class TrackEntity {
     @JoinColumn(name = "mediatypeid",referencedColumnName = "mediatypeid")
     private MediaTypeEntity mediaTypeEntity;
 
+    @OneToMany(mappedBy = "trackEntity")
+    private List<PlaylistTrackEntity> playlistTrackEntities;
+
+    /*
     @ManyToMany(mappedBy = "playlistTrack")
     private List<PlaylistEntity> trackPlaylist;
 
@@ -56,4 +61,6 @@ public class TrackEntity {
         this.trackPlaylist.add(playlist);
         playlist.getPlaylistTrack().add(this);
     }
+
+     */
 }

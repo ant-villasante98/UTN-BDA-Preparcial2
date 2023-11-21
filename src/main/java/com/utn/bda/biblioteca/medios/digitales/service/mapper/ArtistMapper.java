@@ -20,7 +20,7 @@ public class ArtistMapper implements Mapper<ArtistDto, ArtistEntity>{
     public ArtistEntity toEntity(ArtistDto model) {
         return new ArtistEntity(
                 model.getId(),
-                model.getTitle(),
+                model.getName(),
                 Collections.emptyList()
         );
     }

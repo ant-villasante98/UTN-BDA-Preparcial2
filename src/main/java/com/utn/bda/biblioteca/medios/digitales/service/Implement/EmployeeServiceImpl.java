@@ -8,6 +8,7 @@ import com.utn.bda.biblioteca.medios.digitales.service.mapper.EmployeeMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -35,25 +36,48 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDto getById(Long id) {
         Optional<EmployeeEntity> employeeEntity = this.employeeRepository.findById(id);
 
-        return employeeEntity.map(employeeMapper::toDto).orElseThrow();
+        return employeeEntity.map(employeeMapper::toDto).orElseThrow(()-> new NoSuchElementException("Employee no encontrado con el "+id));
     }
 
     @Override
-    public EmployeeDto save(EmployeeDto model) {
+    public EmployeeDto add(EmployeeDto model) {
+         EmployeeEntity employeeEntity = this.employeeMapper.toEntity(model);
+         if(model.getReportsTo() != null){
+             this.getById(model.getReportsTo());
+         }
+        EmployeeEntity employeeEntitySaved = this.employeeRepository.save(employeeEntity);
 
-        Optional<EmployeeEntity> employeeEntity = Stream.of(model).map(employeeMapper::toEntity).findFirst();
-        if(employeeEntity.get().getId() == null){
-            Optional<Long> maxId = this.employeeRepository.findAll().stream().map(EmployeeEntity::getId).max(Long::compareTo);
-            maxId.ifPresent(id -> employeeEntity.get().setId(id+1));
+        return this.employeeMapper.toDto(employeeEntitySaved);
+    }
+
+    @Override
+    public void update(Long id, EmployeeDto model) {
+        EmployeeEntity employeeEntity = this.employeeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Employee no encontrado con el id "+ id));
+        if (model.getReportsTo() != null) {
+            this.getById(model.getReportsTo());
         }
-        this.employeeRepository.save(employeeEntity.get());
 
-        return Stream.of(employeeEntity.get()).map(employeeMapper::toDto).findFirst().get();
+        employeeEntity.setLastName(model.getLastName());
+        employeeEntity.setFirstName(model.getFirstName());
+        employeeEntity.setTitle(model.getTitle());
+        employeeEntity.setBirthDate(model.getBirthDate());
+        employeeEntity.setHireDate(model.getHireDate());
+        employeeEntity.setAddress(model.getAddress());
+        employeeEntity.setCity(model.getCity());
+        employeeEntity.setState(model.getState());
+        employeeEntity.setCountry(model.getCountry());
+        employeeEntity.setPostalCode(model.getPostalCode());
+        employeeEntity.setPhone(model.getPhone());
+        employeeEntity.setFax(model.getFax());
+        employeeEntity.setEmail(model.getEmail());
+        employeeEntity.setReportsTo(EmployeeEntity.builder().id(model.getReportsTo()).build());
+
+        this.employeeRepository.save(employeeEntity);
     }
 
     @Override
     public void delete(Long id) {
-        Optional<EmployeeEntity> employeeEntity = this.employeeRepository.findById(id);
-            this.employeeRepository.save(employeeEntity.orElseThrow());
+        EmployeeEntity employeeEntity = this.employeeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Employee no encontrado"));
+        this.employeeRepository.save(employeeEntity);
     }
 }

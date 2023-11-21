@@ -8,6 +8,7 @@ import com.utn.bda.biblioteca.medios.digitales.service.mapper.ArtistMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -31,17 +32,28 @@ public class ArtistServiceImpl implements ArtistService {
     public ArtistDto getById(Long id) {
         Optional<ArtistEntity> artistEntity = this.artistRepository.findById(id);
 
-        return this.artistMapper.toDto(artistEntity.orElseThrow());
+        return this.artistMapper.toDto(artistEntity.orElseThrow(()-> new NoSuchElementException("Artist no encontrado")));
     }
 
     @Override
-    public ArtistDto save(ArtistDto model) {
-        return null;
+    public ArtistDto add(ArtistDto model) {
+        ArtistEntity artistEntity = this.artistMapper.toEntity(model);
+        ArtistEntity savedArtistEntity = this.artistRepository.save(artistEntity);
+        return this.artistMapper.toDto(savedArtistEntity);
+    }
+
+    @Override
+    public void update(Long id, ArtistDto model) {
+        ArtistEntity artistEntity = this.artistRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Artist no encontrado"));
+        artistEntity.setName(model.getName());
+        this.artistRepository.save(artistEntity);
+
     }
 
     @Override
     public void delete(Long id) {
-
+        ArtistEntity artistEntity = this.artistRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Artist no encontrado"));
+        this.artistRepository.delete(artistEntity);
     }
 
     @Override

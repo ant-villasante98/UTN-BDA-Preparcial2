@@ -15,6 +15,7 @@ import java.util.List;
 public class MediaTypeEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mediatypeid")
     private Long id;
 

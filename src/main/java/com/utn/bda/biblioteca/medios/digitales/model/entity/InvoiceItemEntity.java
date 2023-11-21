@@ -12,6 +12,7 @@ import lombok.*;
 @Builder
 public class InvoiceItemEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "invoicelineid")
     private Long id;
 

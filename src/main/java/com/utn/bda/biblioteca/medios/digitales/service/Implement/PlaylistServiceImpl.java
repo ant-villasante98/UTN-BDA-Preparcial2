@@ -3,7 +3,6 @@ package com.utn.bda.biblioteca.medios.digitales.service.Implement;
 import com.utn.bda.biblioteca.medios.digitales.model.dto.PlaylistDto;
 import com.utn.bda.biblioteca.medios.digitales.model.dto.TrackDto;
 import com.utn.bda.biblioteca.medios.digitales.model.entity.PlaylistEntity;
-import com.utn.bda.biblioteca.medios.digitales.model.entity.TrackEntity;
 import com.utn.bda.biblioteca.medios.digitales.repository.PlaylistRepository;
 import com.utn.bda.biblioteca.medios.digitales.repository.TrackRepository;
 import com.utn.bda.biblioteca.medios.digitales.service.PlaylistService;
@@ -12,23 +11,16 @@ import com.utn.bda.biblioteca.medios.digitales.service.mapper.PlaylistMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.*;
 
 @Service
 public class PlaylistServiceImpl implements PlaylistService {
 
     private final PlaylistRepository playlistRepository;
-    private final TrackRepository trackRepository;
     private final PlaylistMapper playlistMapper;
-
     private final TrackService trackService;
-    public PlaylistServiceImpl(PlaylistRepository playlistRepository, TrackRepository trackRepository, PlaylistMapper playlistMapper, TrackService trackService) {
+    public PlaylistServiceImpl(PlaylistRepository playlistRepository, PlaylistMapper playlistMapper, TrackService trackService) {
         this.playlistRepository = playlistRepository;
-        this.trackRepository = trackRepository;
         this.playlistMapper = playlistMapper;
         this.trackService = trackService;
     }
@@ -44,26 +36,30 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public PlaylistDto getById(Long id) {
         Optional<PlaylistEntity> optionalPlaylist = this.playlistRepository.findById(id);
-        return optionalPlaylist.map(playlistMapper::toDto).orElseThrow();
+        return optionalPlaylist.map(playlistMapper::toDto).orElseThrow(()-> new NoSuchElementException("Playlist no encontrada"));
     }
 
     @Override
-    public PlaylistDto save(PlaylistDto model) {
-        Optional<PlaylistEntity> optionalPlaylist = Stream.of(model).map(playlistMapper::toEntity).findFirst();
-        if(optionalPlaylist.get().getId() ==null){
-            Optional<Long> maxId = this.playlistRepository.findAll().stream().map(PlaylistEntity::getId).max(Long::compareTo);
-            maxId.ifPresent(id -> optionalPlaylist.get().setId(id+1));
-        }
-        PlaylistEntity playlistEntity = optionalPlaylist.orElseThrow();
+    public PlaylistDto add(PlaylistDto model) {
+        PlaylistEntity playlist = this.playlistMapper.toEntity(model);
+        PlaylistEntity playlistEntitySaved = this.playlistRepository.save(playlist);
+        return this.playlistMapper.toDto(playlistEntitySaved);
+    }
+
+    @Override
+    public void update(Long id, PlaylistDto model) {
+        PlaylistEntity playlistEntity = this.playlistRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Playlist no encontrada"));
+        playlistEntity.setName(model.getName());
         this.playlistRepository.save(playlistEntity);
-        return Stream.of(playlistEntity).map(playlistMapper::toDto).findFirst().orElseThrow();
     }
 
     @Override
     public void delete(Long id) {
+        PlaylistEntity playlist = this.playlistRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Playlist no encontrada"));
+        this.playlistRepository.delete(playlist);
 
     }
-
+/*
     @Override
     public void deleteTrackFromPlaylist( PlaylistDto playlistDto) {
         Optional<PlaylistEntity> playlistEntity = this.playlistRepository.findById(playlistDto.getId());
@@ -91,6 +87,8 @@ public class PlaylistServiceImpl implements PlaylistService {
             }
         }
     }
+
+ */
 
     @Override
     public List<TrackDto> trackListByPlaylist(Long idPlaylist) {
@@ -121,7 +119,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         PlaylistDto playlistDto = new PlaylistDto(null,playlistName,trackDtos);
 
 
-        PlaylistDto playlistDtoSaved = this.save(playlistDto);
+        PlaylistDto playlistDtoSaved = this.add(playlistDto);
         List<TrackDto> tracksOrdenadas = playlistDtoSaved.
                 getTrackList().stream()
                 .sorted(

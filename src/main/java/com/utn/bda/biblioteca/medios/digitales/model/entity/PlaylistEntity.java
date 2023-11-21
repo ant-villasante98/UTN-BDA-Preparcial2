@@ -15,11 +15,16 @@ import java.util.List;
 public class PlaylistEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "playlistid")
     private Long id;
 
     private String name;
 
+    @OneToMany(mappedBy = "playlistEntity")
+    private List<PlaylistTrackEntity> playlistTrackEntities;
+
+    /*
     @ManyToMany
     @JoinTable(
             name = "playlist_track",
@@ -27,5 +32,7 @@ public class PlaylistEntity {
             inverseJoinColumns = @JoinColumn(name = "trackid")
     )
     private List<TrackEntity> playlistTrack;
+
+    */
 
 }

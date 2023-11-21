@@ -40,8 +40,8 @@ public class EmployeeMapper implements Mapper<EmployeeDto, EmployeeEntity>{
             reportsTo = EmployeeEntity.builder().id(model.getReportsTo()).build();
         }
 
-        if(model.getId() == null){
-            return new EmployeeEntity(
+        return new EmployeeEntity(
+                    model.getId(),
                     model.getLastName(),
                     model.getFirstName(),
                     model.getTitle(),
@@ -56,28 +56,9 @@ public class EmployeeMapper implements Mapper<EmployeeDto, EmployeeEntity>{
                     model.getFax(),
                     model.getEmail(),
                     reportsTo,
+                    Collections.emptyList(),
                     Collections.emptyList()
             );
-        }
 
-        return new EmployeeEntity(
-                model.getId(),
-                model.getLastName(),
-                model.getFirstName(),
-                model.getTitle(),
-                model.getBirthDate(),
-                model.getHireDate(),
-                model.getAddress(),
-                model.getCity(),
-                model.getState(),
-                model.getCountry(),
-                model.getPostalCode(),
-                model.getPhone(),
-                model.getFax(),
-                model.getEmail(),
-                reportsTo,
-                Collections.emptyList(),
-                Collections.emptyList()
-        );
     }
 }

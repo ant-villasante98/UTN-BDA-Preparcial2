@@ -5,13 +5,14 @@ import com.utn.bda.biblioteca.medios.digitales.application.request.PlaylistTrack
 import com.utn.bda.biblioteca.medios.digitales.model.dto.PlaylistDto;
 import com.utn.bda.biblioteca.medios.digitales.model.dto.TrackDto;
 import com.utn.bda.biblioteca.medios.digitales.service.PlaylistService;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/playlisttracks")
+@RequestMapping("/api/playlisttracks")
 public class PlaylistTrackController {
 
     private final PlaylistService playlistService;
@@ -21,6 +22,18 @@ public class PlaylistTrackController {
         this.playlistService = playlistService;
     }
 
+    @PostMapping
+    public ResponseEntity<Object> addTrackToPlaylist(@RequestBody Object object){
+        return null;
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Object> deleteTrackFromPlaylist(@RequestBody Object object){
+        return null;
+    }
+
+
+    /*
     @GetMapping("/{id}")
     public ResponseEntity<Object> tracksFromPlaylist(@PathVariable(name = "id") Long idPlaylist){
         try {
@@ -39,7 +52,7 @@ public class PlaylistTrackController {
         try {
 
             PlaylistDto playlistDto = PlaylistDto.from(addTrackToPlaylist);
-            this.playlistService.associationTrackToPlaylist(playlistDto);
+            //this.playlistService.associationTrackToPlaylist(playlistDto);
             return ResponseHandler.noContent();
         }catch (Exception exception){
             return ResponseHandler.badRequest("Bad Request");
@@ -53,10 +66,12 @@ public class PlaylistTrackController {
         try {
 
             PlaylistDto playlistDto = PlaylistDto.from(addTrackToPlaylist);
-            this.playlistService.deleteTrackFromPlaylist(playlistDto);
+            //this.playlistService.deleteTrackFromPlaylist(playlistDto);
             return ResponseHandler.noContent();
         }catch (Exception exception){
             return ResponseHandler.badRequest("Bad Request");
         }
     }
+
+     */
 }

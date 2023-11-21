@@ -25,7 +25,7 @@ public class PlaylistDto {
             trackDtos =playlistRequest.getTrackList();
         }
         return  new PlaylistDto(
-                null,
+                0L,
                 playlistRequest.getName(),
                 trackDtos
         );

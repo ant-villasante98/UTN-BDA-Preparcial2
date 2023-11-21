@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/v1/playlists")
+@RequestMapping("/api/playlists")
 public class PlaylistController {
     private final PlaylistService playlistService;
 
@@ -23,28 +23,38 @@ public class PlaylistController {
 
     @GetMapping
     public ResponseEntity<Object> getAll(){
-        List<PlaylistDto> playlistDtos = this.playlistService.getAll();
-        return ResponseHandler.success(playlistDtos);
+        try {
+
+            List<PlaylistDto> playlistDtos = this.playlistService.getAll();
+            return new ResponseEntity<>(playlistDtos, HttpStatus.OK);
+        }catch (Exception ex){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable long id){
-        PlaylistDto playlistDto;
+
         try {
-            playlistDto = this.playlistService.getById(id);
-        }catch (Exception exception){
+            PlaylistDto playlistDto = this.playlistService.getById(id);
+            return new ResponseEntity<>(playlistDto, HttpStatus.OK);
+        }catch (NoSuchElementException notFound){
+            return new ResponseEntity<>(notFound.getMessage(),HttpStatus.NOT_FOUND);
+        }
+        catch (Exception exception){
             exception.printStackTrace();
             return ResponseHandler.badRequest("No se pudo encontrar el recurso");
         }
-        return ResponseHandler.success(playlistDto);
     }
 
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody CreatePlaylistRequest playlistRequest){
-        PlaylistDto playlistDto = PlaylistDto.from(playlistRequest);
         try {
-            PlaylistDto result = this.playlistService.save(playlistDto);
-            return ResponseHandler.created(result);
+            PlaylistDto playlistDto = PlaylistDto.from(playlistRequest);
+            PlaylistDto result = this.playlistService.add(playlistDto);
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+        }catch (NoSuchElementException notFound){
+            return new ResponseEntity<>(notFound.getMessage() ,HttpStatus.NOT_FOUND);
         }catch (Exception exception){
             exception.printStackTrace();
             return ResponseHandler.badRequest("No se pudo crear el recurso");
@@ -53,18 +63,30 @@ public class PlaylistController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> put(@PathVariable Long id, @RequestBody PlaylistDto playlistRequest ){
-        if (id != playlistRequest.getId()){
-            return  ResponseHandler.badRequest("Peticion incorrecta");
-        }
         try {
-            this.playlistService.save(playlistRequest);
+            this.playlistService.update(id , playlistRequest);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (NoSuchElementException notFound){
+            return new ResponseEntity<>(notFound.getMessage() ,HttpStatus.NOT_FOUND);
         }catch (Exception exception){
             exception.printStackTrace();
             return ResponseHandler.badRequest("No se pudo modificar");
         }
-        return ResponseHandler.noContent();
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@PathVariable long id){
+        try{
+            this.playlistService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (NoSuchElementException notFound){
+            return new ResponseEntity<>(notFound.getMessage() ,HttpStatus.NOT_FOUND);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
+    /*
     // Consigna 2
     @PostMapping("/consigna2")
     public ResponseEntity<Object> createPlaylistByArtistAndGenre(@RequestBody CreatePlaylistByArtistAndGenreRequest playlistCreate){
@@ -76,4 +98,6 @@ public class PlaylistController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+     */
 }

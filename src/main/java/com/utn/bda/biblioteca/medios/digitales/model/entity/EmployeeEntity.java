@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 public class EmployeeEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employeeid")
     private Long id;
 
@@ -62,23 +63,5 @@ public class EmployeeEntity {
     @OneToMany(mappedBy = "employeeEntity")
     private List<CustomerEntity> customerEntities;
 
-    public EmployeeEntity( String lastName, String firstName, String title, LocalDateTime birthDate, LocalDateTime hireDate, String address, String city, String state, String country, String postalCode, String phone, String fax, String email, EmployeeEntity reportsTo, List<EmployeeEntity> employeeEntities){
-        this.lastName = lastName;
-        this.firstName = firstName;
-
-        this.title = title;
-        this.birthDate = birthDate;
-        this.hireDate = hireDate;
-        this.address = address;
-        this.city = city;
-        this.state = state;
-        this.country = country;
-        this.postalCode = postalCode;
-        this.phone = phone;
-        this.fax = fax;
-        this.email = email;
-        this.reportsTo = reportsTo;
-        this.employeeEntities = employeeEntities;
-    }
 
 }

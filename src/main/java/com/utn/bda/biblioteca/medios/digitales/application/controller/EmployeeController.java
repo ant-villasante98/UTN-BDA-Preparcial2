@@ -4,13 +4,15 @@ import com.utn.bda.biblioteca.medios.digitales.application.ResponseHandler;
 import com.utn.bda.biblioteca.medios.digitales.application.request.CreateEmployeeRequest;
 import com.utn.bda.biblioteca.medios.digitales.model.dto.EmployeeDto;
 import com.utn.bda.biblioteca.medios.digitales.service.EmployeeService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/v1/employees")
+@RequestMapping("/api/employees")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -19,56 +21,62 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-
     @GetMapping
     public ResponseEntity<Object> getAll(){
         List<EmployeeDto> employeeDtos = this.employeeService.getAll();
-        return ResponseHandler.success( employeeDtos);
+        return new ResponseEntity<>(employeeDtos, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getById(@PathVariable Long id){
-        EmployeeDto employeeDto = this.employeeService.getById(id);
-        return ResponseHandler.success( employeeDto);
+    public ResponseEntity<Object> getById(@PathVariable long id){
+        try{
+            EmployeeDto employeeDto = this.employeeService.getById(id);
+            return new ResponseEntity<>(employeeDto, HttpStatus.OK);
+        }catch (NoSuchElementException notFound){
+            return new ResponseEntity<>(notFound.getMessage() ,HttpStatus.NOT_FOUND);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody CreateEmployeeRequest employeeRequest){
-        EmployeeDto employeeDto = EmployeeDto.from(employeeRequest);
-        try {
-           employeeDto = this.employeeService.save(employeeDto);
+        try{
+            EmployeeDto employeeDto = this.employeeService.add(EmployeeDto.from(employeeRequest));
+            return new ResponseEntity<>(employeeDto, HttpStatus.CREATED);
+        }catch (NoSuchElementException notFound){
+            return new ResponseEntity<>(notFound.getMessage() ,HttpStatus.NOT_FOUND);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        catch (Exception exception){
-            exception.printStackTrace();
-            return ResponseHandler.badRequest("No se pudo crear el employee");
-        }
-        return ResponseHandler.created(employeeDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> put(@PathVariable long id ,@RequestBody EmployeeDto employeeRequest){
-        if (id!= employeeRequest.getId()){
-            return  ResponseHandler.badRequest("Peticion incorrecta");
+    public ResponseEntity<Object> update(@PathVariable long id ,@RequestBody EmployeeDto employeeDto){
+        try{
+            this.employeeService.update( id, employeeDto);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (NoSuchElementException notFound){
+            return new ResponseEntity<>(notFound.getMessage() ,HttpStatus.NOT_FOUND);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        try {
-            this.employeeService.save(employeeRequest);
-        }catch (Exception exception){
-            exception.printStackTrace();
-            return ResponseHandler.badRequest("No se pudo modificar");
-        }
-        return ResponseHandler.noContent();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable long id){
         try{
             this.employeeService.delete(id);
-        }catch (Exception exception){
-            exception.printStackTrace();
-            return ResponseHandler.badRequest("No se pudo eliminar el elemento");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (NoSuchElementException notFound){
+            return new ResponseEntity<>(notFound.getMessage() ,HttpStatus.NOT_FOUND);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return ResponseHandler.noContent();
-
     }
 
 }

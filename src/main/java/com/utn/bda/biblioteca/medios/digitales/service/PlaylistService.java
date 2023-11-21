@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface PlaylistService extends Service<PlaylistDto,Long>{
 
+    /*
     void deleteTrackFromPlaylist( PlaylistDto playlistDto);
 
     void associationTrackToPlaylist(PlaylistDto playlistDto);
+     */
 
     List<TrackDto> trackListByPlaylist(Long idPlaylist);
 
