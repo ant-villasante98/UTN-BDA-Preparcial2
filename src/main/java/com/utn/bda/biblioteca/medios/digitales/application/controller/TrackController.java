@@ -86,7 +86,6 @@ public class TrackController {
     }
 
 
-    /*
     // Consigna 1
     @GetMapping("/consigna1")
     public ResponseEntity<Object> getByArtistAndGenre(@RequestParam("artistid") long artistId , @RequestParam("genreid") long genreId){
@@ -106,7 +105,6 @@ public class TrackController {
         }
     }
 
-     */
 
 
 

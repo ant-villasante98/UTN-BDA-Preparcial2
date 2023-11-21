@@ -86,7 +86,6 @@ public class PlaylistController {
         }
     }
 
-    /*
     // Consigna 2
     @PostMapping("/consigna2")
     public ResponseEntity<Object> createPlaylistByArtistAndGenre(@RequestBody CreatePlaylistByArtistAndGenreRequest playlistCreate){
@@ -99,5 +98,4 @@ public class PlaylistController {
         }
     }
 
-     */
 }
