@@ -43,7 +43,7 @@ public class CustomerMapper implements Mapper<CustomerDto, CustomerEntity>{
                 model.getPhone(),
                 model.getFax(),
                 model.getEmail(),
-                EmployeeEntity.builder().id(model.getSuporterEmployee()).build(),
+                EmployeeEntity.builder().id(model.getSuporterEmployeeId()).build(),
                 Collections.emptyList()
 
         );

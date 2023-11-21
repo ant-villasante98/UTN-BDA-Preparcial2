@@ -42,7 +42,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public InvoiceDto add(InvoiceDto model) {
-        this.customerService.getById(model.getCustomer());
+        this.customerService.getById(model.getCustomerId());
         InvoiceEntity invoiceEntity = this.invoiceMapper.toEntity(model);
         InvoiceEntity savedInvoice = this.invoiceRepository.save(invoiceEntity);
         return this.invoiceMapper.toDto(savedInvoice);
@@ -51,7 +51,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public void update(Long id, InvoiceDto model) {
         InvoiceEntity invoiceEntity = this.invoiceRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Invoice no encontrado"));
-        this.customerService.getById(model.getCustomer());
+        this.customerService.getById(model.getCustomerId());
         invoiceEntity.setInvoiceDate(model.getInvoiceDate());
         invoiceEntity.setBillingAddress(model.getBillingAddress());
         invoiceEntity.setBillingCity(model.getBillingCity());
@@ -59,7 +59,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceEntity.setBillingCountry(model.getBillingCountry());
         invoiceEntity.setBillingPostalCode(model.getBillingPostalCode());
         invoiceEntity.setTotal(model.getTotal());
-        invoiceEntity.setCustomerEntity(CustomerEntity.builder().id(model.getCustomer()).build());
+        invoiceEntity.setCustomerEntity(CustomerEntity.builder().id(model.getCustomerId()).build());
         this.invoiceRepository.save(invoiceEntity);
 
     }

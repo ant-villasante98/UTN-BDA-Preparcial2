@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 
 @Service
@@ -42,8 +41,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto add(EmployeeDto model) {
          EmployeeEntity employeeEntity = this.employeeMapper.toEntity(model);
-         if(model.getReportsTo() != null){
-             this.getById(model.getReportsTo());
+         if(model.getReportsToId() != null){
+             this.getById(model.getReportsToId());
          }
         EmployeeEntity employeeEntitySaved = this.employeeRepository.save(employeeEntity);
 
@@ -53,8 +52,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void update(Long id, EmployeeDto model) {
         EmployeeEntity employeeEntity = this.employeeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Employee no encontrado con el id "+ id));
-        if (model.getReportsTo() != null) {
-            this.getById(model.getReportsTo());
+        if (model.getReportsToId() != null) {
+            this.getById(model.getReportsToId());
         }
 
         employeeEntity.setLastName(model.getLastName());
@@ -70,7 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeEntity.setPhone(model.getPhone());
         employeeEntity.setFax(model.getFax());
         employeeEntity.setEmail(model.getEmail());
-        employeeEntity.setReportsTo(EmployeeEntity.builder().id(model.getReportsTo()).build());
+        employeeEntity.setReportsTo(EmployeeEntity.builder().id(model.getReportsToId()).build());
 
         this.employeeRepository.save(employeeEntity);
     }

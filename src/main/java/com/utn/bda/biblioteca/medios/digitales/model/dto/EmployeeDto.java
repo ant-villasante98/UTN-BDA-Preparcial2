@@ -41,7 +41,7 @@ public class EmployeeDto {
 
     private String email;
 
-    private Long reportsTo;
+    private Long reportsToId;
 
     public  static EmployeeDto from(CreateEmployeeRequest employeeRequest){
 
@@ -60,7 +60,7 @@ public class EmployeeDto {
                 employeeRequest.getPhone(),
                 employeeRequest.getFax(),
                 employeeRequest.getEmail(),
-                employeeRequest.getReportsTo()
+                employeeRequest.getReportsToId()
         );
 
     }

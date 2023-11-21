@@ -2,7 +2,6 @@ package com.utn.bda.biblioteca.medios.digitales.model.dto;
 
 
 import com.utn.bda.biblioteca.medios.digitales.application.request.CreateCustomerRequest;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,7 +36,7 @@ public class CustomerDto {
 
     private String email;
 
-    private Long suporterEmployee;
+    private Long suporterEmployeeId;
 
     public static CustomerDto from(CreateCustomerRequest customerRequest){
         return new CustomerDto(
@@ -53,7 +52,7 @@ public class CustomerDto {
                 customerRequest.getPhone(),
                 customerRequest.getFax(),
                 customerRequest.getEmail(),
-                customerRequest.getSuporterEmployee()
+                customerRequest.getSuporterEmployeeId()
         );
     }
 

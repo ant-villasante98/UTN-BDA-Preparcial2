@@ -1,7 +1,9 @@
 package com.utn.bda.biblioteca.medios.digitales.service;
 
+import com.utn.bda.biblioteca.medios.digitales.model.dto.PlaylistTrackDto;
+
 public interface PlaylistTrackService {
-    void addTrackToPlaylist(Long trackId, Long playlistId);
-    void deleteTrackFromPlaylist(Long trackId, Long playlistId);
+    void addTrackToPlaylist(PlaylistTrackDto playlistTrackDto);
+    void deleteTrackFromPlaylist(PlaylistTrackDto playlistTrackDto);
 
 }

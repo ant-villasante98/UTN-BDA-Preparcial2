@@ -5,8 +5,6 @@ import com.utn.bda.biblioteca.medios.digitales.model.entity.CustomerEntity;
 import com.utn.bda.biblioteca.medios.digitales.model.entity.InvoiceEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-
 @Service
 public class InvoiceMapper implements Mapper<InvoiceDto, InvoiceEntity>{
     private final InvoiceItemMapper invoiceItemMapper;
@@ -42,7 +40,7 @@ public class InvoiceMapper implements Mapper<InvoiceDto, InvoiceEntity>{
                 model.getBillingCountry(),
                 model.getBillingPostalCode(),
                 model.getTotal(),
-                CustomerEntity.builder().id(model.getCustomer()).build(),
+                CustomerEntity.builder().id(model.getCustomerId()).build(),
                 model.getInvoiceItems().stream().map(invoiceItemMapper::toEntity).toList()
         );
     }

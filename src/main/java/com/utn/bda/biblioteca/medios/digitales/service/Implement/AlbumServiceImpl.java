@@ -53,7 +53,7 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public void update(Long id, AlbumDto model) {
         AlbumEntity albumEntity = this.albumRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Album no encontrado"));
-        this.artistService.getById(model.getId());
+        this.artistService.getById(model.getArtistId());
         albumEntity.setTitle(model.getTitle());
         albumEntity.setArtistEntity(
                 ArtistEntity

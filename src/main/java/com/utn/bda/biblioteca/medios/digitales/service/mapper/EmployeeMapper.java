@@ -36,8 +36,8 @@ public class EmployeeMapper implements Mapper<EmployeeDto, EmployeeEntity>{
     @Override
     public EmployeeEntity toEntity(EmployeeDto model) {
         EmployeeEntity reportsTo = null;
-        if(model.getReportsTo() != null ){
-            reportsTo = EmployeeEntity.builder().id(model.getReportsTo()).build();
+        if(model.getReportsToId() != null ){
+            reportsTo = EmployeeEntity.builder().id(model.getReportsToId()).build();
         }
 
         return new EmployeeEntity(

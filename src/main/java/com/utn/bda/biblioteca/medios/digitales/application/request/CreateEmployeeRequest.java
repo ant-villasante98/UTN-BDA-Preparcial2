@@ -36,6 +36,6 @@ public class CreateEmployeeRequest {
 
     private String email;
 
-    private Long reportsTo;
+    private Long reportsToId;
 
 }

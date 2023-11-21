@@ -32,5 +32,5 @@ public class CreateCustomerRequest {
 
     private String email;
 
-    private Long suporterEmployee;
+    private Long suporterEmployeeId;
 }

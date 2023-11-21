@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDto add(CustomerDto model) {
         CustomerEntity customerEntity = this.customerMapper.toEntity(model);
-        this.employeeService.getById(model.getSuporterEmployee());
+        this.employeeService.getById(model.getSuporterEmployeeId());
         CustomerEntity savedCustomer = this.customerRepository.save(customerEntity);
         return this.customerMapper.toDto(savedCustomer);
 
@@ -53,7 +53,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void update(Long id, CustomerDto model) {
         CustomerEntity customerEntity = this.customerMapper.toEntity(model);
-        this.employeeService.getById(model.getSuporterEmployee());
+        this.employeeService.getById(model.getSuporterEmployeeId());
         customerEntity.setLastName(model.getLastName());
         customerEntity.setFirstName(model.getFirstName());
         customerEntity.setCompany(model.getCompany());
@@ -65,7 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerEntity.setPhone(model.getPhone());
         customerEntity.setFax(model.getFax());
         customerEntity.setEmail(model.getEmail());
-        customerEntity.setEmployeeEntity(EmployeeEntity.builder().id(model.getSuporterEmployee()).build());
+        customerEntity.setEmployeeEntity(EmployeeEntity.builder().id(model.getSuporterEmployeeId()).build());
         this.customerRepository.save(customerEntity);
 
     }

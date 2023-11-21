@@ -1,35 +1,55 @@
 package com.utn.bda.biblioteca.medios.digitales.application.controller;
 
-import com.utn.bda.biblioteca.medios.digitales.application.ResponseHandler;
-import com.utn.bda.biblioteca.medios.digitales.application.request.PlaylistTrackRequest;
-import com.utn.bda.biblioteca.medios.digitales.model.dto.PlaylistDto;
-import com.utn.bda.biblioteca.medios.digitales.model.dto.TrackDto;
-import com.utn.bda.biblioteca.medios.digitales.service.PlaylistService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import com.utn.bda.biblioteca.medios.digitales.model.dto.PlaylistTrackDto;
+import com.utn.bda.biblioteca.medios.digitales.service.PlaylistTrackService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/playlisttracks")
 public class PlaylistTrackController {
 
-    private final PlaylistService playlistService;
+    private final PlaylistTrackService playlistTrackService;
 
-
-    public PlaylistTrackController(PlaylistService playlistService) {
-        this.playlistService = playlistService;
+    public PlaylistTrackController(PlaylistTrackService playlistTrackService) {
+        this.playlistTrackService = playlistTrackService;
     }
 
     @PostMapping
-    public ResponseEntity<Object> addTrackToPlaylist(@RequestBody Object object){
-        return null;
+    public ResponseEntity<Object> addTrackToPlaylist(@RequestBody PlaylistTrackDto playlistTrackDto, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try{
+            this.playlistTrackService.addTrackToPlaylist(playlistTrackDto);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (NoSuchElementException notFound){
+            notFound.printStackTrace();
+            return new ResponseEntity<>(notFound.getMessage() ,HttpStatus.NOT_FOUND);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping
-    public ResponseEntity<Object> deleteTrackFromPlaylist(@RequestBody Object object){
-        return null;
+    public ResponseEntity<Object> deleteTrackFromPlaylist(@RequestBody PlaylistTrackDto playlistTrackDto){
+        try{
+            this.playlistTrackService.deleteTrackFromPlaylist(playlistTrackDto);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (NoSuchElementException notFound){
+            return new ResponseEntity<>(notFound.getMessage() ,HttpStatus.NOT_FOUND);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 

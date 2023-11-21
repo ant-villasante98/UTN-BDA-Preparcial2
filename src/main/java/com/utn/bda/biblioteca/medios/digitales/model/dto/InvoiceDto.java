@@ -1,7 +1,6 @@
 package com.utn.bda.biblioteca.medios.digitales.model.dto;
 
 import com.utn.bda.biblioteca.medios.digitales.application.request.CreateInvoiceRequest;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +29,7 @@ public class InvoiceDto {
     private String billingPostalCode;
 
     private Long total;
-    private Long customer;
+    private Long customerId;
     private List<InvoiceItemDto> invoiceItems;
 
     public static InvoiceDto from(CreateInvoiceRequest invoiceRequest){
@@ -43,7 +42,7 @@ public class InvoiceDto {
                 invoiceRequest.getBillingCountry(),
                 invoiceRequest.getBillingPostalCode(),
                 invoiceRequest.getTotal(),
-                invoiceRequest.getCustomer(),
+                invoiceRequest.getCustomerId(),
                 invoiceRequest.getInvoiceItems().stream().map(InvoiceItemDto::from).toList()
         );
     }

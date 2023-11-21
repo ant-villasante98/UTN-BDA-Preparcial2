@@ -26,7 +26,7 @@ public class CreateInvoiceRequest {
 
     private Long total;
 
-    private Long customer;
+    private Long customerId;
 
     private List<CreateInvoiceItemRequest> invoiceItems;
 }
